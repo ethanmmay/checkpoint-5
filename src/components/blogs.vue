@@ -4,7 +4,7 @@
       <div class="col-12">
         <div class="row">
           <div v-for="blog in state.blogs" class="col-3" :key="blog.title">
-            <div class="card mt-3">
+            <div class="card mt-3" @click="showBlog(blog._id)">
               <div class="card-img-top mt-5">
                 <img :src="blog.creator.picture" alt="User Picture">
               </div>
@@ -37,7 +37,10 @@ export default {
       await blogService.getBlogs()
     })
     return {
-      state
+      state,
+      async showBlog(id) {
+        await blogService.showBlog(id)
+      }
     }
   }
 }

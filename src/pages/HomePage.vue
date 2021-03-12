@@ -1,15 +1,22 @@
 <template>
   <div>
     <Blogs />
-    <div v-if="AppState.blogDetails">
+    <div v-if="blogDetails">
       <BlogDetails />
     </div>
   </div>
 </template>
 
 <script>
+import { computed } from 'vue'
+import { AppState } from '../AppState'
 export default {
-  name: 'Home'
+  name: 'Home',
+  setup() {
+    return {
+      blogDetails: computed(() => AppState.blogDetails)
+    }
+  }
 }
 </script>
 
