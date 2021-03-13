@@ -4,13 +4,13 @@
       <div class="col-12">
         <div class="row">
           <div v-for="blog in state.blogs" class="col-3" :key="blog.title">
-            <div class="card mt-3" @click="showBlog(blog._id)">
+            <div class="card mt-3" @click="showBlog(blog)">
               <div class="card-img-top mt-5">
-                <img :src="blog.creator.picture" alt="User Picture">
+                <img v-if="blog.creator" :src="blog.creator.picture" alt="User Picture">
               </div>
               <div class="card-body">
                 <h4>{{ blog.title }}</h4>
-                <h6 class="text-secondary">
+                <h6 class="text-secondary" v-if="blog.creator">
                   By {{ blog.creator.email }}
                 </h6>
                 <h6>{{ blog.body.substring(0, 60)+ '...' }}</h6>
@@ -27,19 +27,22 @@
 import { AppState } from '../AppState'
 import { computed, onMounted, reactive } from 'vue'
 import { blogService } from '../services/BlogsService'
+import { commentService } from '../services/CommentsService'
 export default {
   name: 'Blogs',
   setup() {
     const state = reactive({
-      blogs: computed(() => AppState.blogs)
+      blogs: computed(() => AppState.blogs),
+      comments: computed(() => AppState.comments)
     })
     onMounted(async() => {
       await blogService.getBlogs()
     })
     return {
       state,
-      async showBlog(id) {
-        await blogService.showBlog(id)
+      async showBlog(blog) {
+        await commentService.getComments(blog.id)
+        await blogService.showBlogDetails(blog)
       }
     }
   }

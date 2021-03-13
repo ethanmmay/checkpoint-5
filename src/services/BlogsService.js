@@ -1,31 +1,37 @@
 /* eslint-disable no-undef */
 import { AppState } from '../AppState'
+import router from '../router'
 import { logger } from '../utils/Logger'
-import { blogApi } from './AxiosService'
+import { api } from './AxiosService'
 
 class BlogsService {
   async getBlogs() {
     try {
-      const res = await blogApi.get('')
+      const res = await api.get('api/blogs')
       AppState.blogs = res.data
     } catch (error) {
       logger.log(error)
     }
   }
 
-  async showBlog(id) {
+  showBlogDetails(blog) {
     try {
-      const res = await blogApi.get('' + id)
-      AppState.blogDetails = res.data
-      const blog = AppState.blogDetails
-      Swal.fire({
-        title: blog.title,
-        text: blog.body,
-        imageUrl: blog.creator.picture,
-        imageWidth: 300,
-        imageHeight: 300,
-        imageAlt: 'Custom image'
-      })
+      // Set Blog Details to Clicked Blog
+      // Save Blog Details in Case of Refresh
+      // Push to About Page and Display Blog Details
+      AppState.blogDetails = blog
+      router.push({ name: 'BlogDetails' })
+    } catch (error) {
+      logger.log(error)
+    }
+  }
+
+  checkBlogDetails() {
+    try {
+      // Get Blog Details from Storage
+      // Display Blog Details
+      window.localStorage.getItem('currentBlogId') ? AppState.currentBlogId = window.localStorage.getItem('currentBlogId') : window.localStorage.setItem('currentBlogId', blog.id)
+      if (!AppState.blogDetails) { AppState.blogDetails = AppState.blogs.filter(b => b.id === AppState.currentBlogId) }
     } catch (error) {
       logger.log(error)
     }
@@ -60,7 +66,7 @@ class BlogsService {
   }
 
   async postBlog(rawBlog) {
-    await blogApi.post('', rawBlog)
+    await api.post('api/blogs', rawBlog)
     this.getBlogs()
   }
 }

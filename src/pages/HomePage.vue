@@ -1,9 +1,6 @@
 <template>
   <div>
     <Blogs />
-    <div v-if="blogDetails">
-      <BlogDetails />
-    </div>
   </div>
 </template>
 
