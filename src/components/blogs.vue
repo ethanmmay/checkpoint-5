@@ -14,6 +14,9 @@
                   By {{ blog.creator.email }}
                 </h6>
                 <h6>{{ blog.body.substring(0, 60)+ '...' }}</h6>
+                <button class="btn btn-danger" v-show="blog.creatorId === state.currentUserId">
+                  Delete
+                </button>
               </div>
             </div>
           </div>
@@ -33,7 +36,8 @@ export default {
   setup() {
     const state = reactive({
       blogs: computed(() => AppState.blogs),
-      comments: computed(() => AppState.comments)
+      comments: computed(() => AppState.comments),
+      currentUserId: computed(() => AppState.user.id)
     })
     onMounted(async() => {
       await blogService.getBlogs()

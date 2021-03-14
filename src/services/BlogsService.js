@@ -3,6 +3,7 @@ import { AppState } from '../AppState'
 import router from '../router'
 import { logger } from '../utils/Logger'
 import { api } from './AxiosService'
+import { commentService } from './CommentsService'
 
 class BlogsService {
   async getBlogs() {
@@ -17,9 +18,10 @@ class BlogsService {
   showBlogDetails(blog) {
     try {
       // Set Blog Details to Clicked Blog
-      // Save Blog Details in Case of Refresh
-      // Push to About Page and Display Blog Details
       AppState.blogDetails = blog
+      // Save Blog Details in Case of Refresh
+      window.localStorage.setItem('currentBlog', JSON.stringify(blog))
+      // Push to About Page and Display Blog Details
       router.push({ name: 'BlogDetails' })
     } catch (error) {
       logger.log(error)
@@ -29,9 +31,8 @@ class BlogsService {
   checkBlogDetails() {
     try {
       // Get Blog Details from Storage
-      // Display Blog Details
-      window.localStorage.getItem('currentBlogId') ? AppState.currentBlogId = window.localStorage.getItem('currentBlogId') : window.localStorage.setItem('currentBlogId', blog.id)
-      if (!AppState.blogDetails) { AppState.blogDetails = AppState.blogs.filter(b => b.id === AppState.currentBlogId) }
+      AppState.blogDetails = JSON.parse(window.localStorage.getItem('currentBlog'))
+      commentService.getComments(AppState.blogDetails.id)
     } catch (error) {
       logger.log(error)
     }

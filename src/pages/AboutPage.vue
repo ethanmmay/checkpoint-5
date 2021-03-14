@@ -1,7 +1,5 @@
 <template>
-  <div class="about">
-    <BlogDetails />
-  </div>
+  <BlogDetails />
 </template>
 
 <script>
@@ -9,3 +7,6 @@ export default {
   name: 'AboutPage'
 }
 </script>
+
+<style>
+</style>
