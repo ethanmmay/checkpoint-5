@@ -10,7 +10,7 @@
         </transition>
       </router-view>
     </main>
-    <footer class="mt-5">
+    <footer>
       <div class="bg-dark text-light text-center p-4">
         Made with 💖 by CodeWorks
       </div>
@@ -34,6 +34,7 @@ export default {
 @import "./assets/scss/main.scss";
 
 main {
+  min-height: 77.9vh;
   height: auto;
 }
 </style>

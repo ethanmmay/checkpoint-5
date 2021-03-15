@@ -13,8 +13,12 @@
             </h6>
             <h6>{{ state.blog.body }}</h6><br>
             <h5>Comments: </h5>
-            <h6 v-for="comment in state.comments" :key="comment.body">
+            <h6 v-for="comment in state.comments" :key="comment.body" class="d-flex justify-content-between">
               {{ comment.creator.name.substring(0, comment.creator.name.indexOf('@')) + ': ' + comment.body }}
+              <div class="d-inline-flex">
+                <i class="fa fa-pencil text-info mr-2" aria-hidden="true" @click="editComment(comment)"></i>
+                <i class="fa fa-minus-circle text-danger" aria-hidden="true" @click="deleteComment(comment.id)"></i>
+              </div>
             </h6>
           </div>
         </div>
@@ -27,6 +31,7 @@
 import { AppState } from '../AppState'
 import { computed, onMounted, reactive } from 'vue'
 import { blogService } from '../services/BlogsService'
+import { commentService } from '../services/CommentsService'
 // import { commentService } from '../services/CommentsService'
 export default {
   name: 'BlogDetails',
@@ -39,18 +44,19 @@ export default {
       comments: computed(() => AppState.comments)
     })
     return {
-      state
+      state,
+      deleteComment(commentId) {
+        commentService.deleteComment(commentId)
+      },
+      editComment(comment) {
+        commentService.editComment(comment)
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-
-main {
-  min-height: 80vh;
-}
-
 img {
   max-width: 300px;
   max-height: 300px;

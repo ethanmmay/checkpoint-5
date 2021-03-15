@@ -22,7 +22,7 @@ class BlogsService {
       // Save Blog Details in Case of Refresh
       window.localStorage.setItem('currentBlog', JSON.stringify(blog))
       // Push to About Page and Display Blog Details
-      router.push({ name: 'BlogDetails' })
+      router.push({ name: 'About' })
     } catch (error) {
       logger.log(error)
     }
@@ -68,6 +68,35 @@ class BlogsService {
 
   async postBlog(rawBlog) {
     await api.post('api/blogs', rawBlog)
+    this.getBlogs()
+  }
+
+  async editBlog(rawBlog) {
+    Swal.fire({
+      title: 'Edit Blog',
+      html: `<input type="text" id="title" class="swal2-input" placeholder="Blog Title" value="${rawBlog.title}"><input type="text" id="body" class="swal2-input" placeholder="Your Blog" value="${rawBlog.body}">`,
+      confirmButtonText: 'Save',
+      focusConfirm: false,
+      preConfirm: () => {
+        const title = Swal.getPopup().querySelector('#title').value
+        const body = Swal.getPopup().querySelector('#body').value
+        if (!title || !body) {
+          Swal.showValidationMessage('Please enter title and body')
+        }
+        return { title: title, body: body }
+      }
+    }).then(async(result) => {
+      const editedBlog = {
+        title: result.value.title,
+        body: result.value.body
+      }
+      await api.put('api/blogs/' + rawBlog.id, editedBlog)
+      this.getBlogs()
+    })
+  }
+
+  async deleteBlog(blogId) {
+    await api.delete('api/blogs/' + blogId)
     this.getBlogs()
   }
 }

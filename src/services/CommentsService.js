@@ -12,6 +12,14 @@ class CommentsService {
       logger.log(error)
     }
   }
+
+  async editComment(comment) {
+    // EDIT COMMENT
+  }
+
+  async deleteComment(commentId) {
+    // DELETE COMMENT
+  }
 }
 
 export const commentService = new CommentsService()
