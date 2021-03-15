@@ -37,7 +37,21 @@ class CommentsService {
   }
 
   async postComment(body, blogId) {
-    await api.post('api/comments', { body: body, blog: blogId })
+    if (AppState.user.isAuthenticated) {
+      await api.post('api/comments', { body: body, blog: blogId })
+      this.getComments(blogId)
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'DENIED',
+        text: 'Must be logged in to comment!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload()
+        }
+      }
+      )
+    }
   }
 
   async editComment(comment) {
