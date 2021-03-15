@@ -12,12 +12,15 @@
               By <span class="text-secondary">{{ state.blog.creator.email.substring(0, state.blog.creator.email.indexOf('@')) }}</span>
             </h6>
             <h6>{{ state.blog.body }}</h6><br>
-            <h5>Comments: </h5>
+            <div class="d-flex justify-content-between">
+              <h5>Comments: </h5>
+              <i class="fa fa-comment fa-2x text-dark" aria-hidden="true" @click="addComment(state.blog.id)"></i>
+            </div>
             <h6 v-for="comment in state.comments" :key="comment.body" class="d-flex justify-content-between">
               {{ comment.creator.name.substring(0, comment.creator.name.indexOf('@')) + ': ' + comment.body }}
               <div class="d-inline-flex">
-                <i class="fa fa-pencil text-info mr-2" aria-hidden="true" @click="editComment(comment)"></i>
-                <i class="fa fa-minus-circle text-danger" aria-hidden="true" @click="deleteComment(comment.id)"></i>
+                <i class="fa fa-pencil text-info mr-2" aria-hidden="true" v-show="comment.creator.name === state.currentUser" @click="editComment(comment)"></i>
+                <i class="fa fa-minus-circle text-danger" aria-hidden="true" v-show="comment.creator.name === state.currentUser" @click="deleteComment(comment.id)"></i>
               </div>
             </h6>
           </div>
@@ -32,7 +35,6 @@ import { AppState } from '../AppState'
 import { computed, onMounted, reactive } from 'vue'
 import { blogService } from '../services/BlogsService'
 import { commentService } from '../services/CommentsService'
-// import { commentService } from '../services/CommentsService'
 export default {
   name: 'BlogDetails',
   setup() {
@@ -41,7 +43,8 @@ export default {
     })
     const state = reactive({
       blog: computed(() => AppState.blogDetails),
-      comments: computed(() => AppState.comments)
+      comments: computed(() => AppState.comments),
+      currentUser: computed(() => AppState.user.name)
     })
     return {
       state,
@@ -50,6 +53,9 @@ export default {
       },
       editComment(comment) {
         commentService.editComment(comment)
+      },
+      addComment(blogId) {
+        commentService.addComment(blogId)
       }
     }
   }
@@ -69,10 +75,8 @@ img {
     filter: drop-shadow(3px 5px 3px #33333393);
 }
 
-.card:hover {
-    transform: scale(1.05);
-    transition: all 0.05s ease-out;
-    cursor: pointer;
+.fa {
+  cursor: pointer;
 }
 
 .card-img-top {
@@ -80,5 +84,14 @@ img {
     align-items: center;
     justify-content: center;
     filter: drop-shadow(3px 5px 3px #33333393)
+}
+
+.fa-comment {
+  margin-top: -5px;
+}
+
+.fa-comment:hover {
+  transform: scale(1.15);
+  transition: all 0.05s ease-out;
 }
 </style>

@@ -5,15 +5,8 @@
 </template>
 
 <script>
-import { computed } from 'vue'
-import { AppState } from '../AppState'
 export default {
-  name: 'Home',
-  setup() {
-    return {
-      blogDetails: computed(() => AppState.blogDetails)
-    }
-  }
+  name: 'Home'
 }
 </script>
 

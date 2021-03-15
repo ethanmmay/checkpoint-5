@@ -15,6 +15,20 @@ class BlogsService {
     }
   }
 
+  async getMyBlogs() {
+    try {
+      await this.getBlogs()
+      AppState.myBlogs = AppState.blogs.filter(b => {
+        if (b.creator) {
+          return b.creator.name === AppState.user.name
+        }
+        return false
+      })
+    } catch (error) {
+      logger.log(error)
+    }
+  }
+
   showBlogDetails(blog) {
     try {
       // Set Blog Details to Clicked Blog
@@ -40,6 +54,7 @@ class BlogsService {
 
   showBlogForm() {
     try {
+      router.push({ name: 'Home' })
       Swal.fire({
         title: 'New Blog',
         html: '<input type="text" id="title" class="swal2-input" placeholder="Blog Title"><input type="text" id="body" class="swal2-input" placeholder="Your Blog">',
